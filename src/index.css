@@ -1,1 +1,280 @@
-body { margin: 0; background-color: #f3ece9; font-family: 'Instrument Sans', system-ui, sans-serif; }
+body {
+  margin: 0;
+  background: #f3ece9;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.top-card {
+  background: #ffffff;
+  border: 1px solid #e3e5ea;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (min-width: 820px) {
+  .top-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.top-left {
+  max-width: 540px;
+}
+
+.top-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #01395e;
+  margin-bottom: 4px;
+}
+
+.top-accent {
+  display: block;
+  width: 17ch;
+  height: 4px;
+  background: #d46d50;
+  border-radius: 999px;
+  margin: 14px 0;
+}
+
+.top-text {
+  font-size: 0.9rem;
+  color: #3d4a5c;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.top-small {
+  font-size: 0.7rem;
+  color: #6a7481;
+}
+
+.top-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.ring-svg {
+  width: 140px;
+  height: 140px;
+}
+
+.top-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-ring-count {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.top-ring-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6f7a85;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f3ece9;
+  color: #01395e;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  border: 1px solid transparent;
+}
+
+.pill--on {
+  background: #d46d50;
+  color: #ffffff;
+  border-color: #d46d50;
+}
+
+.pill-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(212, 109, 80, 0.3);
+}
+
+.pill-dot--on {
+  background: #ffffff;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 720px) {
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e3e5ea;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #01395e;
+  margin-bottom: 6px;
+}
+
+.card-text {
+  font-size: 0.78rem;
+  color: #425162;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.card-ring {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 8px;
+}
+
+.ring-wrap {
+  width: 130px;
+  height: 130px;
+}
+
+.card-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-ring-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.card-ring-label {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  color: #8a97a4;
+}
+
+.card-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.card-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.card-footer {
+  font-size: 0.65rem;
+  color: #435163;
+  line-height: 1.4;
+}
+
+.card-footnote {
+  font-style: italic;
+  margin-top: 4px;
+  color: #6f7a85;
+}
+
+.weekly {
+  margin-top: 10px;
+}
+
+.weekly-title {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #97a0aa;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.weekly-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.weekly-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.weekly-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #f3ece9;
+}
+
+.weekly-dot--on {
+  background: #d46d50;
+}
+
+.weekly-day {
+  font-size: 0.5rem;
+  color: #9aa3ad;
+}
