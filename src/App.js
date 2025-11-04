@@ -1,33 +1,28 @@
 import React, { useState } from "react";
 import { Users, Activity, Brain, Apple, Star, Moon } from "lucide-react";
 
-// Hello by Grouper palette
 const PALETTE = {
   navy: "#071031",
-  mint: "#e8f8f7",
   clay: "#d46d50",
   blush: "#f3ece9",
-  sky: "#8cbACF",
-  aqua: "#57ced3",
   teal: "#0097A7",
   sand: "#f4d6c6",
-  deepblue: "#01395e",
+  sky: "#8cbACF",
   peach: "#f7ddb6",
+  deepblue: "#01395e",
   gray: "#DADFE6",
 };
 
 function ProgressRing({ progress }) {
   return (
-    <div className="relative w-32 h-32 mb-4 flex items-center justify-center">
-      <svg className="block" viewBox="0 0 36 36">
-        {/* base ring */}
+    <div className="ring-wrap">
+      <svg className="ring-svg" viewBox="0 0 36 36">
         <path
           strokeWidth="3.8"
           stroke={PALETTE.gray}
           fill="none"
           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
         />
-        {/* progress */}
         <path
           strokeWidth="3.8"
           strokeLinecap="round"
@@ -42,26 +37,17 @@ function ProgressRing({ progress }) {
 }
 
 function WeeklyBar({ week }) {
-  // week is array of 7 booleans, oldest -> newest
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
   return (
-    <div className="w-full mt-3">
-      <span className="text-[10px] uppercase tracking-wide text-slate-400 block mb-1 text-center">
-        Past 7 days
-      </span>
-      <div className="flex gap-1 justify-center">
+    <div className="weekly">
+      <div className="weekly-title">Past 7 days</div>
+      <div className="weekly-row">
         {week.map((done, idx) => (
-          <div key={idx} className="flex flex-col items-center gap-1">
+          <div key={idx} className="weekly-dot-wrap">
             <span
-              className={`w-4 h-4 rounded-full border ${
-                done
-                  ? "bg-[#d46d50] border-[#d46d50]"
-                  : "bg-[#f3ece9] border-transparent"
-              }`}
+              className={done ? "weekly-dot weekly-dot--on" : "weekly-dot"}
             ></span>
-            <span className="text-[9px] text-slate-400 leading-none">
-              {dayLabels[idx]}
-            </span>
+            <span className="weekly-day">{dayLabels[idx]}</span>
           </div>
         ))}
       </div>
@@ -83,47 +69,37 @@ function DimensionTracker({
   week,
 }) {
   const progress = Math.min((count / 30) * 100, 100);
-  const lightBgColors = [PALETTE.sand, PALETTE.peach, PALETTE.mint, PALETTE.sky];
-  const buttonTextColor = lightBgColors.includes(color)
-    ? PALETTE.navy
-    : "#ffffff";
+  const lightColors = [PALETTE.sand, PALETTE.sky, PALETTE.peach];
+  const buttonTextColor = lightColors.includes(color) ? PALETTE.navy : "#fff";
 
   return (
-    <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center text-center border border-gray-100 gap-1 hover:shadow-lg transition-transform">
+    <div className="card">
       <div
-        className="w-10 h-10 rounded-full flex items-center justify-center mb-2"
-        style={{ backgroundColor: `${color}20` }}
+        className="card-icon"
+        style={{ backgroundColor: `${color}20`.replace("20", "33") }}
       >
-        <Icon className="w-5 h-5" style={{ color }} />
+        <Icon style={{ color, width: 20, height: 20 }} />
       </div>
-      <h2 className="text-xl font-extrabold text-[#01395e] mb-2 tracking-tight">
-        {title}
-      </h2>
-      <p className="text-slate-700 text-sm mb-3 leading-relaxed max-w-xs">
-        {question}
-      </p>
-      <div className="relative mb-2">
+      <h2 className="card-title">{title}</h2>
+      <p className="card-text">{question}</p>
+      <div className="card-ring">
         <ProgressRing progress={progress} />
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-slate-900">{count}</span>
-          <span className="text-[10px] uppercase tracking-wide text-slate-400">
-            days
-          </span>
+        <div className="card-ring-center">
+          <span className="card-ring-count">{count}</span>
+          <span className="card-ring-label">days</span>
         </div>
       </div>
       <button
         onClick={onCheckIn}
         disabled={checkedToday}
-        className={`px-5 py-2 rounded-full text-sm font-bold transition border border-transparent ${
-          checkedToday ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
-        }`}
+        className={checkedToday ? "card-btn card-btn--disabled" : "card-btn"}
         style={{ backgroundColor: color, color: buttonTextColor }}
       >
-        {checkedToday ? "Logged for today" : buttonText}
+        <b>{checkedToday ? "Logged for today" : buttonText}</b>
       </button>
-      <div className="mt-2 text-slate-600 text-xs leading-relaxed">
+      <div className="card-footer">
         <p>Current streak: {streak} 🔥</p>
-        <p className="italic mt-1">{motivation}</p>
+        <p className="card-footnote">{motivation}</p>
       </div>
       <WeeklyBar week={week} />
     </div>
@@ -132,7 +108,7 @@ function DimensionTracker({
 
 function WellnessTracker({ totals, completedCount, todayStr, lastCheckIns }) {
   const totalActions = totals.reduce((sum, n) => sum + n, 0);
-  const progress = Math.min((completedCount / totals.length) * 100, 100);
+  const progress = Math.min((completedCount / 6) * 100, 100);
   const labels = [
     "Social",
     "Movement",
@@ -141,75 +117,57 @@ function WellnessTracker({ totals, completedCount, todayStr, lastCheckIns }) {
     "Purpose",
     "Self-care",
   ];
+
   return (
-    <div className="bg-white rounded-3xl p-14 mb-10 shadow-md border border-gray-200 flex flex-col gap-10">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-        <div className="flex-1">
-          <h1 className="text-2xl font-extrabold text-[#01395e] mb-2 tracking-tight relative inline-block">
-            Your Daily Wellness Tracker
-            <span
-              className="block h-1 mt-3 rounded-full"
-              style={{ backgroundColor: PALETTE.clay, width: "17ch" }}
-            ></span>
-          </h1>
-          <p className="text-slate-700 text-sm mb-5 leading-relaxed">
-            Track your progress across all six dimensions of well-being. Each
-            time you click a button below, you record one meaningful action — a
-            daily step toward living well in body, mind, and community.
-          </p>
-          <p className="text-slate-700 text-sm">
-            Total actions this month:{" "}
-            <span className="font-semibold">{totalActions}</span>
-          </p>
-          <p className="text-slate-600 text-xs mt-3">
-            Goal: Take at least one action in every dimension each day.
-          </p>
-        </div>
-        <div className="relative w-36 h-36 flex items-center justify-center">
-          <svg className="block" viewBox="0 0 36 36">
-            <path
-              strokeWidth="3.8"
-              stroke={PALETTE.gray}
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-            />
-            <path
-              strokeWidth="3.8"
-              strokeLinecap="round"
-              stroke={PALETTE.clay}
-              fill="none"
-              strokeDasharray={`${progress}, 100`}
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-            />
-          </svg>
-          <div className="absolute flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-slate-900">
-              {completedCount}/6
-            </span>
-            <span className="text-[10px] uppercase tracking-wide text-slate-400">
-              completed today
-            </span>
-          </div>
+    <div className="top-card">
+      <div className="top-left">
+        <h1 className="top-title">Your Daily Wellness Tracker</h1>
+        <span className="top-accent" />
+        <p className="top-text">
+          Track your progress across all six dimensions of well-being. Each time
+          you click a button below, you record one meaningful action — a daily
+          step toward living well in body, mind, and community.
+        </p>
+        <p className="top-text">
+          Total actions this month: <b>{totalActions}</b>
+        </p>
+        <p className="top-small">
+          Goal: Take at least one action in every dimension each day.
+        </p>
+      </div>
+      <div className="top-ring">
+        <svg className="ring-svg" viewBox="0 0 36 36">
+          <path
+            strokeWidth="3.8"
+            stroke={PALETTE.gray}
+            fill="none"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            strokeWidth="3.8"
+            strokeLinecap="round"
+            stroke={PALETTE.clay}
+            fill="none"
+            strokeDasharray={`${progress}, 100`}
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div className="top-ring-center">
+          <span className="top-ring-count">{completedCount}/6</span>
+          <span className="top-ring-label">completed today</span>
         </div>
       </div>
+
       {/* daily 6-pill row */}
-      <div className="flex flex-wrap gap-3">
+      <div className="pill-row">
         {labels.map((label, idx) => {
           const done = lastCheckIns[idx] === todayStr;
           return (
             <div
               key={label}
-              className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium border transition ${
-                done
-                  ? "bg-[#d46d50] text-white border-[#d46d50]"
-                  : "bg-[#f3ece9] text-[#01395e] border-transparent"
-              }`}
+              className={done ? "pill pill--on" : "pill"}
             >
-              <span
-                className={`w-2.5 h-2.5 rounded-full ${
-                  done ? "bg-white" : "bg-[#d46d50] opacity-40"
-                }`}
-              ></span>
+              <span className={done ? "pill-dot pill-dot--on" : "pill-dot"} />
               {label}
             </div>
           );
@@ -220,11 +178,9 @@ function WellnessTracker({ totals, completedCount, todayStr, lastCheckIns }) {
 }
 
 export default function App() {
-  // 6 dimensions
   const [counts, setCounts] = useState([0, 0, 0, 0, 0, 0]);
   const [streaks, setStreaks] = useState([0, 0, 0, 0, 0, 0]);
   const [lastCheckIns, setLastCheckIns] = useState(["", "", "", "", "", ""]);
-  // 6 x 7 days (oldest -> newest)
   const [weeklyLogs, setWeeklyLogs] = useState([
     [false, false, false, false, false, false, false],
     [false, false, false, false, false, false, false],
@@ -237,7 +193,6 @@ export default function App() {
   const todayStr = new Date().toDateString();
 
   const handleCheckIn = (index) => {
-    // only 1 per day per dimension
     setCounts((prev) => {
       if (lastCheckIns[index] === todayStr) return prev;
       return prev.map((c, i) => (i === index ? c + 1 : c));
@@ -254,28 +209,27 @@ export default function App() {
     });
     setWeeklyLogs((prev) => {
       if (lastCheckIns[index] === todayStr) return prev;
-      const next = prev.map((week, i) => {
+      return prev.map((week, i) => {
         if (i !== index) return week;
-        const newWeek = [...week];
-        newWeek.shift(); // drop oldest
-        newWeek.push(true); // today done
-        return newWeek;
+        const nextWeek = [...week];
+        nextWeek.shift();
+        nextWeek.push(true);
+        return nextWeek;
       });
-      return next;
     });
   };
 
   const completedToday = lastCheckIns.filter((d) => d === todayStr).length;
 
   return (
-    <div className="min-h-screen bg-[#f3ece9] p-6 flex flex-col gap-6">
+    <div className="page">
       <WellnessTracker
         totals={counts}
         completedCount={completedToday}
         todayStr={todayStr}
         lastCheckIns={lastCheckIns}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="card-grid">
         <DimensionTracker
           icon={Users}
           title="Social Connection"
